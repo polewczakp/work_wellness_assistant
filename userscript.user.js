@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Work Wellness Assistant Bridge
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Detect YouTube usage and show work time panel
 // @match        *://*/*
 // @grant        GM_addStyle
@@ -46,12 +46,12 @@
             const s = await r.json();
             document.getElementById('wwa_work').textContent = s.work_minutes;
             document.getElementById('wwa_left').textContent = s.remaining_minutes;
-        }catch(e){/* ignore */}
+        }catch(_){ /* ignore */ }
     }
     setInterval(refresh, 15000); refresh();
 
-    // --- YouTube detection ---
-    let onYouTube = /(^|\.)youtube\.com$/.test(location.hostname);
+    // YouTube watching detection
+    const onYouTube = /(^|\.)youtube\.com$/.test(location.hostname);
     let ytActive = false;
 
     function startYT(){
@@ -86,14 +86,4 @@
             fetch(`${API}/event`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({type:'break_end', reason:'manual-hotkey'})});
         }
     });
-
-    // Optional Teams web heuristics (placeholder)
-    if(/(^|\.)teams\.microsoft\.com$/.test(location.hostname)){
-        const obs = new MutationObserver(()=>{
-            const inCall = !!document.querySelector('[data-tid="call"], [aria-label*="In call"], video');
-            // Could POST hint to backend if desired
-            // fetch(`${API}/event`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({type:'teams_hint', inCall})});
-        });
-        obs.observe(document.documentElement, {subtree:true, childList:true, attributes:true});
-    }
 })();

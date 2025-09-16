@@ -1,33 +1,27 @@
 # Work Wellness Assistant
 
-Lokalny agent Python + skrypt Tampermonkey do higieny pracy wzrok/kręgosłup i rozliczania 8h.
+Python agent + Tampermonkey bridge. Windows 11 native lock/unlock. Microsoft Graph
+presence-based suppression during Teams calls (optional).
 
-## Szybki start
+## Setup (Windows 11)
 
-```bash
+```powershell
 python -m venv .venv
-# Linux/macOS
-. .venv/bin/activate
-# Windows (PowerShell)
-# .venv\Scripts\Activate.ps1
-
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python app.py
 ```
 
-Otwórz `userscript.user.js` w przeglądarce i zainstaluj w Tampermonkey.
+Install `userscript.user.js` into Tampermonkey. Open http://localhost:5600/panel
 
-Panel: http://localhost:5600/panel
+### Microsoft Teams presence (optional)
+Set env var `GRAPH_TOKEN` with a token that has `Presence.Read` scope for your account.
+If present, reminders are minimized during calls and revealed when the call ends.
 
-Pliki logów: `aktywnosc.xlsx` i `popatrz_w_dal.xlsx` na Pulpicie.
+### Logs
+- `aktywnosc.xlsx` – events with accumulated minutes
+- `popatrz_w_dal.xlsx` – look-far reactions
 
-## Konfiguracja
-Zmienne w `config.py` lub przez env:
-- `DESKTOP_DIR` – ścieżka Pulpitu (domyślnie `~/Desktop`)
-- `WORK_TARGET_MIN` – domyślnie 480
-- `EXTEND_BLOCK_MIN` – domyślnie 15
-- `LOOK_FAR_EVERY_MIN` – domyślnie 20
-- `LOOK_FAR_UNCLOSEABLE_S` – domyślnie 20
-- `STAND_UP_EVERY_MIN` – domyślnie 60
-- `STANDUP_RESET_IDLE_MIN` – domyślnie 2 (uznajemy ≥2 min bezczynności jako „wstanie”)
-- `GRAPH_TOKEN` – opcjonalny token Microsoft Graph Presence (Presence.Read)
+### Hotkeys
+- Ctrl+Alt+B – start break
+- Ctrl+Alt+N – end break
