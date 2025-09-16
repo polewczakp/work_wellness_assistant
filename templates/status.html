@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="PL">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Status pracy</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 24px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; max-width: 520px; }
+    .row { display: flex; gap: 12px; margin-top: 8px; }
+    .row > div { flex: 1; background: #f7f7f7; padding: 8px 12px; border-radius: 8px; text-align: center; }
+    button { padding: 8px 12px; border-radius: 8px; border: 1px solid #888; background: white; cursor: pointer; }
+    button:hover { background: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Dzisiejszy status</h2>
+    <div id="day"></div>
+    <div class="row">
+      <div>Praca: <b id="work"></b> min</div>
+      <div>Przerwy: <b id="break"></b> min</div>
+      <div>Nieobecność: <b id="absence"></b> min</div>
+    </div>
+    <div class="row">
+      <div>Cel: <b id="target"></b> min</div>
+      <div>Pozostało: <b id="remaining"></b> min</div>
+    </div>
+    <div class="row" style="margin-top:12px;">
+      <button onclick="fetch('/start', {method:'POST'})">Start</button>
+      <button onclick="fetch('/end', {method:'POST'})">Koniec</button>
+      <a href="/status" target="_blank"><button>JSON</button></a>
+    </div>
+  </div>
+
+  <script>
+    async function refresh(){
+      const r = await fetch('/status');
+      const s = await r.json();
+      document.getElementById('day').textContent = s.day + (s.started ? ' (start: '+s.started+')' : '');
+      document.getElementById('work').textContent = s.work_minutes;
+      document.getElementById('break').textContent = s.break_minutes;
+      document.getElementById('absence').textContent = s.absence_minutes;
+      document.getElementById('target').textContent = s.target_minutes;
+      document.getElementById('remaining').textContent = s.remaining_minutes;
+    }
+    refresh();
+    setInterval(refresh, 15000);
+  </script>
+</body>
+</html>
