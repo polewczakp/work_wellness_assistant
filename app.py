@@ -149,8 +149,9 @@ def minute_tick() -> None:
             import tkinter as tk
             from tkinter import messagebox
 
-            nonlocal end_target_min
-            root = tk.Tk(); root.withdraw()
+            global end_target_min
+            root = tk.Tk()
+            root.withdraw()
             yes = messagebox.askyesno(
                 title="Koniec pracy",
                 message=(
