@@ -75,6 +75,7 @@ class WorkTracker:
                 self.state.work_effective += timedelta(minutes=1)
             return self.state.snapshot()
 
+    # Breaks
     def break_start(self) -> dict:
         with self._lock:
             if not self.state.in_break:
@@ -101,6 +102,7 @@ class WorkTracker:
         self.state.in_break = False
         self.state.break_started = None
 
+    # YouTube
     def youtube_start(self) -> dict:
         with self._lock:
             if not self.state.youtube_on:
@@ -127,6 +129,7 @@ class WorkTracker:
         self.state.youtube_on = False
         self.state.yt_started = None
 
+    # Status
     def get_status(self) -> dict:
         with self._lock:
             self._rollover_if_needed()

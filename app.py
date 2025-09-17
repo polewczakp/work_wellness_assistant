@@ -80,11 +80,9 @@ def minute_tick() -> None:
     # Count active minute if any input within last 60s and no break
     if (now - last_input_ts) <= timedelta(seconds=60):
         tracker.tick_active_minute()
-        # If we were in break, close it
         if tracker.state.in_break:
             tracker.break_end()
     else:
-        # Start a generic break if not already in one
         tracker.break_start()
 
     # Heuristic: if in break for >= STANDUP_RESET_IDLE_MIN, treat as stood up
@@ -97,6 +95,7 @@ def minute_tick() -> None:
     status = tracker.get_status()
     in_call = in_call_via_graph()
 
+    # Look far
     if tracker.state.start_ts:
         due_look = (not last_lookfar) or (
             (now - last_lookfar) >= timedelta(minutes=LOOK_FAR_EVERY_MIN)
@@ -117,6 +116,7 @@ def minute_tick() -> None:
             else:
                 LookFarWindow().show_and_log()
 
+    # Stand up
     if tracker.state.start_ts:
         need_stand = (now - last_standup_reset) >= timedelta(
             minutes=STAND_UP_EVERY_MIN
@@ -140,6 +140,7 @@ def minute_tick() -> None:
             else:
                 StandUpWindow().show_and_log()
 
+    # End-of-day
     worked = status["work_minutes"]
     if tracker.state.start_ts and worked >= end_target_min:
         def _ask_extend(
