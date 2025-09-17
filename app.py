@@ -88,7 +88,7 @@ def minute_tick() -> None:
     # Heuristic: if in break for >= STANDUP_RESET_IDLE_MIN, treat as stood up
     if tracker.state.in_break and tracker.state.break_started:
         if (now - tracker.state.break_started) >= timedelta(
-            minutes=STANDUP_RESET_IDLE_MIN
+                minutes=STANDUP_RESET_IDLE_MIN
         ):
             last_standup_reset = now
 
@@ -98,7 +98,7 @@ def minute_tick() -> None:
     # Look far
     if tracker.state.start_ts:
         due_look = (not last_lookfar) or (
-            (now - last_lookfar) >= timedelta(minutes=LOOK_FAR_EVERY_MIN)
+                (now - last_lookfar) >= timedelta(minutes=LOOK_FAR_EVERY_MIN)
         )
         if due_look:
             last_lookfar = now
@@ -122,8 +122,8 @@ def minute_tick() -> None:
             minutes=STAND_UP_EVERY_MIN
         )
         if need_stand and (
-            not last_standup_prompt
-            or (now - last_standup_prompt) >= timedelta(minutes=STAND_UP_EVERY_MIN)
+                not last_standup_prompt
+                or (now - last_standup_prompt) >= timedelta(minutes=STAND_UP_EVERY_MIN)
         ):
             last_standup_prompt = now
             log_activity(
@@ -144,7 +144,7 @@ def minute_tick() -> None:
     worked = status["work_minutes"]
     if tracker.state.start_ts and worked >= end_target_min:
         def _ask_extend(
-            worked_val: float, break_val: float, absence_val: float
+                worked_val: float, break_val: float, absence_val: float
         ) -> None:
             import tkinter as tk
             from tkinter import messagebox
